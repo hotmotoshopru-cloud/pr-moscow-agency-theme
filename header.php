@@ -1,4 +1,5 @@
 <?php if (!defined('ABSPATH')) exit; ?>
+<?php if (file_exists(get_template_directory().'/service-menu.php')) require_once get_template_directory().'/service-menu.php'; ?>
 <!doctype html><html <?php language_attributes(); ?>><head><meta charset="<?php bloginfo('charset'); ?>"><meta name="viewport" content="width=device-width, initial-scale=1"><?php wp_head(); ?></head><body <?php body_class(); ?>><?php wp_body_open(); ?>
 <?php $phone=get_theme_mod('pv_phone','+7 (977) 824-02-00'); $phone_raw=preg_replace('/\D+/','',$phone); ?>
 <?php $about_url=pv_page_url_by_title('О нас',home_url('/#about')); $contacts_url=pv_page_url_by_title('Контакты',home_url('/#contact')); $articles_url=pv_articles_page_url(); ?>
@@ -8,7 +9,7 @@
 <a class="brand" href="<?php echo esc_url(home_url('/')); ?>"><span class="pr">PR</span>одвижение<small>PR АГЕНТСТВО · ПРОДЮСЕРСКИЙ ЦЕНТР</small></a>
 <nav class="menu" aria-label="Основное меню">
 <a href="<?php echo esc_url(home_url('/')); ?>">Главная</a>
-<div class="menu-dropdown-wrap"><a class="menu-dropdown-toggle" href="#directions" aria-haspopup="true">Услуги <span class="menu-caret">⌄</span></a><div class="mega-menu" role="menu"><?php echo pv_all_services_menu(); ?></div></div>
+<div class="menu-dropdown-wrap"><a class="menu-dropdown-toggle" href="#directions" aria-haspopup="true">Услуги <span class="menu-caret">⌄</span></a><div class="mega-menu" role="menu"><?php echo function_exists('pv_fixed_services_menu') ? pv_fixed_services_menu(false) : pv_all_services_menu(); ?></div></div>
 <a href="#cases">Кейсы</a><a href="<?php echo esc_url($about_url); ?>">О нас</a><a href="<?php echo esc_url($articles_url); ?>">Статьи</a><a href="<?php echo esc_url($contacts_url); ?>">Контакты</a>
 </nav>
 <a class="search-btn" href="<?php echo esc_url(home_url('/?s=')); ?>" aria-label="Поиск"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 5 5"/></svg></a>
@@ -17,6 +18,6 @@
 </div>
 <div class="mobile-menu" id="mobile-menu">
 <a href="<?php echo esc_url(home_url('/')); ?>">Главная</a><a href="#directions">Услуги</a><a href="#cases">Кейсы</a><a href="<?php echo esc_url($about_url); ?>">О нас</a><a href="<?php echo esc_url($articles_url); ?>">Статьи</a><a href="<?php echo esc_url($contacts_url); ?>">Контакты</a>
-<div class="mobile-services-title">Все услуги и разделы</div><div class="mobile-services-list"><?php echo pv_all_services_menu(true); ?></div>
+<div class="mobile-services-title">Все услуги и разделы</div><div class="mobile-services-list"><?php echo function_exists('pv_fixed_services_menu') ? pv_fixed_services_menu(true) : pv_all_services_menu(true); ?></div>
 </div>
 </header>
