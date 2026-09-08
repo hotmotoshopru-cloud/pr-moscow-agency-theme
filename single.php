@@ -1,0 +1,1 @@
+<?php get_header(); ?><main class="section"><div class="wrap"><article><?php if(have_posts()):while(have_posts()):the_post(); ?><div class="kicker">PRодвижение · Блог</div><h1><?php the_title(); ?></h1><?php if(has_post_thumbnail()) the_post_thumbnail('large'); ?><div><?php the_content(); ?></div><?php endwhile;endif; ?></article></div></main><?php get_footer(); ?>
