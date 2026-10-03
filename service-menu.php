@@ -97,6 +97,10 @@ function pv_fixed_service_catalog(){
 }
 
 function pv_fixed_services_menu($mobile=false){
+    $cache_key=$mobile ? 'pv_fixed_services_menu_mobile_v2' : 'pv_fixed_services_menu_desktop_v2';
+    $cached=get_transient($cache_key);
+    if(is_string($cached) && $cached!=='') return $cached;
+
     $catalog=pv_fixed_service_catalog();
     if($mobile){
         $html='<div class="mega-mobile-items">';
@@ -114,6 +118,7 @@ function pv_fixed_services_menu($mobile=false){
             $html.='</div>';
         }
         $html.='<div class="mobile-service-extra"><a class="mobile-service-parent" href="'.esc_url(pv_articles_page_url()).'">Статьи и новости</a><a class="mobile-service-parent" href="'.esc_url(pv_page_url_by_title('Контакты',home_url('/#contact'))).'">Контакты</a></div></div>';
+        set_transient($cache_key,$html,12 * HOUR_IN_SECONDS);
         return $html;
     }
     $cols=array_chunk($catalog,max(1,(int)ceil(count($catalog)/4)));
@@ -135,5 +140,6 @@ function pv_fixed_services_menu($mobile=false){
         $html.='</div>';
     }
     $html.='<aside class="mega-extra"><strong>Разделы сайта</strong><a href="'.esc_url(pv_articles_page_url()).'">Статьи и новости</a><a href="'.esc_url(pv_page_url_by_title('О нас',home_url('/#about'))).'">О нас</a><a href="'.esc_url(pv_page_url_by_title('Контакты',home_url('/#contact'))).'">Контакты</a></aside></div>';
+    set_transient($cache_key,$html,12 * HOUR_IN_SECONDS);
     return $html;
 }
