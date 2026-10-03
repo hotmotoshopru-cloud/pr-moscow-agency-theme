@@ -14,7 +14,7 @@ WordPress → Записи → Добавить запись.
 Тема добавляет title главной, description, robots index/follow, canonical, Open Graph и JSON-LD Organization/ProfessionalService/WebSite/WebPage.
 Современный WordPress имеет нативный XML sitemap: /wp-sitemap.xml.
 После установки: проверить, что в Настройки → Чтение выключено «Попросить поисковые системы не индексировать сайт»; добавить сайт и sitemap в Яндекс Вебмастер и Google Search Console; привязать Яндекс Метрику; настроить HTTPS и единственную каноническую версию домена; проверить 404, мобильную версию, скорость и Core Web Vitals.
-robots.txt.example — пример. Заменить YOUR-DOMAIN.RU на реальный домен перед использованием.
+Рабочий robots.txt для pr-moscow-agency.ru формируется темой через фильтр robots_txt в functions.php и должен открываться по https://pr-moscow-agency.ru/robots.txt с HTTP 200. Sitemap: https://pr-moscow-agency.ru/wp-sitemap.xml. В Яндекс Вебмастере Sitemap нужно добавить отдельно в разделе «Файлы Sitemap».
 
 ВАЖНО
 Не создавать десятки почти одинаковых SEO-страниц. У каждой посадочной должны быть собственная услуга/интент, кейсы, процесс, FAQ, цены/формат работы или другие реально полезные отличия.
