@@ -1,4 +1,4 @@
-PRодвижение V12 — SEO и статьи
+PRодвижение V24.2.1 — SEO и статьи (SEOPress)
 
 КУДА ПИСАТЬ НОВЫЕ СТАТЬИ
 WordPress → Записи → Добавить запись.
@@ -11,10 +11,11 @@ WordPress → Записи → Добавить запись.
 Не набивать все запросы на одну страницу: под крупные намерения нужны отдельные полезные посадочные страницы.
 
 ТЕХНИЧЕСКОЕ SEO
-Тема добавляет title главной, description, robots index/follow, canonical, Open Graph и JSON-LD Organization/ProfessionalService/WebSite/WebPage.
+SEOPress — единственный источник SEO-метаданных сайта. Тема не генерирует собственные description, canonical, Open Graph/Twitter, robots meta или Schema.org, чтобы не создавать дубли и конфликты.
+Для динамических Записей и статических Страниц SEO Title, Meta Description, canonical, robots, Open Graph/Twitter, Schema.org и связанные SEO-настройки задаются и контролируются через SEOPress.
 Современный WordPress имеет нативный XML sitemap: /wp-sitemap.xml.
 После установки: проверить, что в Настройки → Чтение выключено «Попросить поисковые системы не индексировать сайт»; добавить сайт и sitemap в Яндекс Вебмастер и Google Search Console; привязать Яндекс Метрику; настроить HTTPS и единственную каноническую версию домена; проверить 404, мобильную версию, скорость и Core Web Vitals.
-Рабочий robots.txt для pr-moscow-agency.ru формируется темой через фильтр robots_txt в functions.php и должен открываться по https://pr-moscow-agency.ru/robots.txt с HTTP 200. Sitemap: https://pr-moscow-agency.ru/wp-sitemap.xml. В Яндекс Вебмастере Sitemap нужно добавить отдельно в разделе «Файлы Sitemap».
+Рабочий robots.txt для pr-moscow-agency.ru формируется WordPress через фильтр robots_txt в functions.php. Он должен содержать запрет /wp-admin/, разрешение /wp-admin/admin-ajax.php и строку Sitemap: https://pr-moscow-agency.ru/wp-sitemap.xml. После публикации изменения обязательно проверить URL /robots.txt снаружи сайта и дождаться повторной проверки Яндекс Вебмастером. Sitemap: https://pr-moscow-agency.ru/wp-sitemap.xml уже добавлен в Яндекс Вебмастер; повторно добавлять его не требуется.
 
 ВАЖНО
 Не создавать десятки почти одинаковых SEO-страниц. У каждой посадочной должны быть собственная услуга/интент, кейсы, процесс, FAQ, цены/формат работы или другие реально полезные отличия.
