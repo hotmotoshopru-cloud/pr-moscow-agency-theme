@@ -66,6 +66,26 @@ add_action('wp_head','prodvizhenie_v12_schema',30);
 
 /* Native WordPress sitemap is available at /wp-sitemap.xml on modern WordPress. */
 
+/* V25 — make the root robots.txt deterministic and include the native sitemap.
+   WordPress serves this virtual file at /robots.txt when no physical file exists. */
+function pv_robots_txt($output, $public){
+    if(!$public) return $output;
+
+    $lines = [
+        'User-agent: *',
+        'Disallow: /wp-admin/',
+        'Allow: /wp-admin/admin-ajax.php',
+        'Disallow: /?s=',
+        'Disallow: /search/',
+        '',
+        'Sitemap: '.home_url('/wp-sitemap.xml'),
+    ];
+
+    return implode("\n", $lines)."\n";
+}
+add_filter('robots_txt','pv_robots_txt',20,2);
+
+
 /* V23.2 — clean service navigation: services only in «Услуги», articles/utility pages in the main navigation. */
 function pv_page_url_by_title($title, $fallback=''){
     $page=get_page_by_title($title, OBJECT, 'page');
