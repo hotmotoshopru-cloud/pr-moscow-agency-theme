@@ -25,44 +25,10 @@ function prodvizhenie_v9_customize($wp_customize){
  foreach([['pv_phone','Телефон','+7 (977) 824-02-00'],['pv_email','Email','5107118@mail.ru']] as $c){$wp_customize->add_setting($c[0],['default'=>$c[2],'sanitize_callback'=>'sanitize_text_field']);$wp_customize->add_control($c[0],['section'=>'pv_contacts','label'=>$c[1],'type'=>'text']);}
 }
 add_action('customize_register','prodvizhenie_v9_customize');
-function prodvizhenie_v9_schema(){ if(is_front_page()){ echo '<script type="application/ld+json">'.wp_json_encode(['@context'=>'https://schema.org','@type'=>'ProfessionalService','name'=>'PRодвижение','url'=>home_url('/'),'telephone'=>get_theme_mod('pv_phone','+7 (977) 824-02-00'),'email'=>get_theme_mod('pv_email','5107118@mail.ru'),'areaServed'=>'Москва, Россия','description'=>'PR агентство в Москве. Продвижение артистов, бизнеса, брендов, политических проектов, музыки, сайтов и социальных сетей.']).'</script>'; } }
-add_action('wp_head','prodvizhenie_v9_schema',30);
-
-/* V12 SEO: clean metadata, canonical, Open Graph and structured data. */
-function prodvizhenie_v12_meta(){
- if (is_admin()) return;
- $title=''; $desc='';
- if(is_front_page()){
-  $title='PR агентство в Москве — PRодвижение | PR, продвижение и репутация';
-  $desc='PR агентство в Москве: PR-продвижение бизнеса, брендов, артистов и экспертов, работа со СМИ, репутацией, SMM, digital и SEO. PRодвижение — стратегии под задачи клиента.';
- } elseif(is_singular()){
-  $title=wp_get_document_title();
-  $desc=has_excerpt()?wp_strip_all_tags(get_the_excerpt()):wp_trim_words(wp_strip_all_tags(get_post_field('post_content',get_queried_object_id())),28,'…');
- } else { $title=wp_get_document_title(); $desc=get_bloginfo('description'); }
- $canonical=is_singular()?get_permalink(): (is_front_page()?home_url('/'):'');
- if($desc) echo '<meta name="description" content="'.esc_attr($desc).'">';
- echo '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">';
- if($canonical) echo '<link rel="canonical" href="'.esc_url($canonical).'">';
- echo '<meta property="og:locale" content="ru_RU"><meta property="og:type" content="'.(is_singular('post')?'article':'website').'"><meta property="og:title" content="'.esc_attr($title).'"><meta property="og:description" content="'.esc_attr($desc).'"><meta property="og:url" content="'.esc_url($canonical?:home_url('/')).'"><meta property="og:site_name" content="PRодвижение">';
- echo '<meta name="twitter:card" content="summary_large_image">';
-}
-add_action('wp_head','prodvizhenie_v12_meta',2);
-add_filter('pre_get_document_title',function($title){ if(is_front_page()) return 'PR агентство в Москве — PRодвижение | PR, продвижение и репутация'; return $title; });
-
-function prodvizhenie_v12_schema(){
- if(!is_front_page()) return;
- $phone=get_theme_mod('pv_phone','+7 (977) 824-02-00');
- $graph=[
-  '@context'=>'https://schema.org','@graph'=>[
-   ['@type'=>['Organization','ProfessionalService'],'@id'=>home_url('/').'#organization','name'=>'PRодвижение','url'=>home_url('/'),'telephone'=>$phone,'email'=>get_theme_mod('pv_email','5107118@mail.ru'),'areaServed'=>[['@type'=>'City','name'=>'Москва'],['@type'=>'Country','name'=>'Россия']],'description'=>'PR агентство в Москве: PR-продвижение, связи со СМИ, репутация, продвижение артистов, бизнеса и брендов, SMM, digital и SEO.','sameAs'=>['https://t.me/prmoscowagency','https://max.ru/channel_VysotskayaLive','https://vk.ru/pr_agency_rus','https://api.whatsapp.com/send?phone=79778240200']],
-   ['@type'=>'WebSite','@id'=>home_url('/').'#website','url'=>home_url('/'),'name'=>'PRодвижение — PR агентство в Москве','publisher'=>['@id'=>home_url('/').'#organization'],'inLanguage'=>'ru-RU'],
-   ['@type'=>'WebPage','@id'=>home_url('/').'#webpage','url'=>home_url('/'),'name'=>'PR агентство в Москве — PRодвижение','isPartOf'=>['@id'=>home_url('/').'#website'],'about'=>['@id'=>home_url('/').'#organization'],'inLanguage'=>'ru-RU']
-  ]
- ];
- echo '<script type="application/ld+json">'.wp_json_encode($graph,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES).'</script>';
-}
-remove_action('wp_head','prodvizhenie_v9_schema',30);
-add_action('wp_head','prodvizhenie_v12_schema',30);
+/* SEO is managed exclusively by SEOPress.
+   The theme deliberately does not output meta descriptions, canonical tags,
+   Open Graph/Twitter tags, robots meta or Schema.org markup. This prevents
+   duplicate/conflicting SEO signals on dynamic and static WordPress pages. */
 
 /* Native WordPress sitemap is available at /wp-sitemap.xml on modern WordPress. */
 
