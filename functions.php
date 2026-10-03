@@ -87,16 +87,61 @@ add_filter('robots_txt','pv_robots_txt',20,2);
 
 
 /* V23.2 — clean service navigation: services only in «Услуги», articles/utility pages in the main navigation. */
+function pv_header_page_urls(){
+    static $urls=null;
+    if($urls!==null) return $urls;
+
+    $cache_key='pv_header_page_urls_v2';
+    $cached=get_transient($cache_key);
+    if(is_array($cached)){
+        $urls=$cached;
+        return $urls;
+    }
+
+    $urls=[
+        'about'=>'',
+        'contacts'=>'',
+        'articles'=>home_url('/stati/')
+    ];
+
+    $about=get_page_by_title('О нас',OBJECT,'page');
+    if($about) $urls['about']=get_permalink($about);
+
+    $contacts=get_page_by_title('Контакты',OBJECT,'page');
+    if($contacts) $urls['contacts']=get_permalink($contacts);
+
+    $articles=get_post(1709);
+    if($articles && $articles->post_status==='publish'){
+        $urls['articles']=get_permalink($articles);
+    }
+
+    set_transient($cache_key,$urls,12 * HOUR_IN_SECONDS);
+    return $urls;
+}
 function pv_page_url_by_title($title, $fallback=''){
-    $page=get_page_by_title($title, OBJECT, 'page');
+    $title=trim(wp_strip_all_tags($title));
+    if($title==='') return $fallback;
+
+    $urls=pv_header_page_urls();
+    if($title==='О нас' && !empty($urls['about'])) return $urls['about'];
+    if($title==='Контакты' && !empty($urls['contacts'])) return $urls['contacts'];
+
+    $page=get_page_by_title($title,OBJECT,'page');
     return $page ? get_permalink($page) : $fallback;
 }
 function pv_articles_page_url(){
-    $page=get_post(1709);
-    return ($page && $page->post_status==='publish') ? get_permalink($page) : home_url('/stati/');
+    $urls=pv_header_page_urls();
+    return !empty($urls['articles']) ? $urls['articles'] : home_url('/stati/');
 }
 function pv_find_page_url($title){
-    $page=get_page_by_title($title, OBJECT, 'page');
+    $title=trim(wp_strip_all_tags($title));
+    if($title==='') return '';
+
+    $urls=pv_header_page_urls();
+    if($title==='О нас' && !empty($urls['about'])) return $urls['about'];
+    if($title==='Контакты' && !empty($urls['contacts'])) return $urls['contacts'];
+
+    $page=get_page_by_title($title,OBJECT,'page');
     return $page ? get_permalink($page) : '';
 }
 
