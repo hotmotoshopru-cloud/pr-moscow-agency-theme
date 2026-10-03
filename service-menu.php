@@ -2,30 +2,69 @@
 if (!defined('ABSPATH')) exit;
 
 /* V24.2 — legacy service menu with reliable links to both Pages and Posts. */
-function pv_fixed_find_service_url($title){
-    $title=trim(wp_strip_all_tags($title));
-    if($title==='') return '';
+function pv_fixed_service_url_map(){
+    static $map = null;
+    if($map !== null) return $map;
 
-    /* Prefer Pages, then regular Posts. The old menu searched only post_type=page,
-       while many real legacy services on this site are regular posts. */
-    foreach(['page','post'] as $type){
-        $q=new WP_Query([
-            'post_type'=>$type,
-            'post_status'=>'publish',
-            'posts_per_page'=>1,
-            'title'=>$title,
-            'orderby'=>'date',
-            'order'=>'ASC',
-            'no_found_rows'=>true,
-            'ignore_sticky_posts'=>true,
-        ]);
-        if(!empty($q->posts[0])) return get_permalink($q->posts[0]);
+    $cache_key = 'pv_fixed_service_url_map_v3';
+    $cached = get_transient($cache_key);
+    if(is_array($cached)){
+        $map = $cached;
+        return $map;
     }
-    return '';
+
+    global $wpdb;
+    $catalog = pv_fixed_service_catalog();
+    $titles = [];
+
+    foreach($catalog as $group){
+        $titles[] = trim(wp_strip_all_tags($group[0]));
+        foreach($group[1] as $child){
+            $titles[] = trim(wp_strip_all_tags($child));
+        }
+    }
+
+    $titles = array_values(array_unique(array_filter($titles)));
+    if(empty($titles)){
+        $map = [];
+        return $map;
+    }
+
+    $placeholders = implode(',', array_fill(0, count($titles), '%s'));
+    $sql = "SELECT ID, post_title, post_type
+            FROM {$wpdb->posts}
+            WHERE post_status = 'publish'
+              AND post_type IN ('page','post')
+              AND post_title IN ($placeholders)
+            ORDER BY FIELD(post_type,'page','post'), post_date ASC";
+
+    $rows = $wpdb->get_results($wpdb->prepare($sql, ...$titles));
+
+    $map = [];
+    foreach((array)$rows as $row){
+        $key = trim(wp_strip_all_tags($row->post_title));
+        if($key !== '' && !isset($map[$key])){
+            $map[$key] = get_permalink((int)$row->ID);
+        }
+    }
+
+    /* Cache the resolved URLs so the large legacy menu does not query
+       WordPress for every single menu item on every page view. */
+    set_transient($cache_key, $map, 12 * HOUR_IN_SECONDS);
+
+    return $map;
+}
+
+function pv_fixed_find_service_url($title){
+    $title = trim(wp_strip_all_tags($title));
+    if($title === '') return '';
+
+    $map = pv_fixed_service_url_map();
+    return isset($map[$title]) ? $map[$title] : '';
 }
 
 function pv_fixed_service_link($title){
-    $url=pv_fixed_find_service_url($title);
+    $url = pv_fixed_find_service_url($title);
     return $url ? $url : '#';
 }
 
